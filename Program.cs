@@ -84,10 +84,10 @@ namespace Merge_Sort
             stopwatch.Stop();
             return data;
         }
-        
+
         static int[] DoMerge(int[] data, int left, int right)
         {
-            if(left<right)
+            if (left < right)
             {
                 int middle = (left + right) / 2;
                 DoMerge(data, left, middle);
@@ -103,37 +103,47 @@ namespace Merge_Sort
 
         static void Merge(int[] data, int left, int middle, int right)
         {
-            int middle1 = middle + 1;
-            int oldPosition = left;
-            int size = right - left + 1;
-            int[] temp = new int[size];
-            int i = 0;
-
-            while(left<=middle && middle1<=right)
+            if (data[middle] <= data[middle + 1])
             {
-                if (data[left] <= data[middle1])
-                    temp[i++] = data[left++];
+                // The two sub-arrays are already in order, no need to merge
+                return;
+            }
+
+            int[] temp = new int[right - left + 1];
+            int i = left, j = middle + 1, k = 0;
+
+            // Merge the two sub-arrays into temp[]
+            while (i <= middle && j <= right)
+            {
+                if (data[i] <= data[j])
+                {
+                    temp[k++] = data[i++];
+                }
                 else
-                    temp[i++] = data[middle1++];
+                {
+                    temp[k++] = data[j++];
+                }
             }
 
-            if(left>middle)
-                for (int j = middle1; j <= right; j++)
-                {
-                    temp[i++] = data[middle1++];
-                }
-            else
-                for (int j = left; j <= middle; j++)
-                {
-                    temp[i++] = data[left++];
-                }
-
-            for (int k = 0; k < size; k++)
+            // Copy the remaining elements of the left sub-array (if any)
+            while (i <= middle)
             {
-                data[oldPosition++] = temp[k];
+                temp[k++] = data[i++];
             }
 
+            // Copy the remaining elements of the right sub-array (if any)
+            while (j <= right)
+            {
+                temp[k++] = data[j++];
+            }
+
+            // Copy the merged sub-array back into the original array
+            for (i = left, k = 0; i <= right; i++, k++)
+            {
+                data[i] = temp[k];
+            }
         }
+
 
 
     }
@@ -155,4 +165,3 @@ namespace Merge_Sort
         }
     }
 }
-
