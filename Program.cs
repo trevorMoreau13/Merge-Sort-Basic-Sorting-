@@ -12,13 +12,13 @@ namespace Merge_Sort
     class Program
     {
         //Original code from: YusufsKaygusuz @ https://github.com/YusufsKaygusuz/Merge-Sort
-
+        const int INSERTION_SORT_THRESHOLD = 15;
         public static Stopwatch stopwatch = new Stopwatch();
         static void Main(string[] args)
         {
             List<Person> unsortedPeople = new List<Person>();
-            string inputFilePath = "C:\\Users\\Bloodred13\\Documents\\Purdue\\IT481 Software Managment\\M4\\Data_To_Sort\\data_10000.txt"; // Update with the actual file path
-            string outputFilePath = "C:\\Users\\Bloodred13\\Documents\\Purdue\\IT481 Software Managment\\M4\\Data_To_Sort\\data_10000_Sorted.txt"; // File path for the sorted data
+            string inputFilePath = "C:\\Users\\Bloodred13\\Documents\\Purdue\\IT481 Software Managment\\M4\\Data_To_Sort\\data_1000.txt"; // Update with the actual file path
+            string outputFilePath = "C:\\Users\\Bloodred13\\Documents\\Purdue\\IT481 Software Managment\\M4\\Data_To_Sort\\data_1000_Sorted.txt"; // File path for the sorted data
 
             try
             {
@@ -89,18 +89,35 @@ namespace Merge_Sort
         {
             if (left < right)
             {
-                int middle = (left + right) / 2;
-                DoMerge(data, left, middle);
-                DoMerge(data, middle + 1, right);
-                Merge(data, left, middle, right);
-                return data;
+                if (right - left <= INSERTION_SORT_THRESHOLD) // Using insertion sort for small sub-arrays
+                {
+                    InsertionSort(data, left, right);
+                }
+                else
+                {
+                    int middle = (left + right) / 2;
+                    DoMerge(data, left, middle);
+                    DoMerge(data, middle + 1, right);
+                    Merge(data, left, middle, right);
+                }
             }
-            else
+            return data;
+        }
+        static void InsertionSort(int[] data, int left, int right)
+        {
+            for (int i = left + 1; i <= right; i++)
             {
-                return data;
+                int key = data[i];
+                int j = i - 1;
+
+                while (j >= left && data[j] > key)
+                {
+                    data[j + 1] = data[j];
+                    j = j - 1;
+                }
+                data[j + 1] = key;
             }
         }
-
         static void Merge(int[] data, int left, int middle, int right)
         {
             if (data[middle] <= data[middle + 1])
@@ -143,9 +160,6 @@ namespace Merge_Sort
                 data[i] = temp[k];
             }
         }
-
-
-
     }
 
 
